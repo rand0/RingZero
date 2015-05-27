@@ -5,11 +5,11 @@ def hash_me_please():
     from Libraries import usefulLibrary
 
     URL_CHALLENGE = "http://ringzer0team.com/challenges/13"
-
+    ERROR_HANDLE = "You are not logged in"
     BEG_MESSAGE = "----- BEGIN MESSAGE -----<br />"   # to retrive the begining of flag
     END_MESSAGE = "<br />"                                      # end its end
 
-    session = connectionLib.connect(URL_CHALLENGE)
+    session = connectionLib.connect(URL_CHALLENGE, ERROR_HANDLE)
     page_source = connectionLib.getWebpage(session, URL_CHALLENGE)
     challenge = connectionLib.getPayload(page_source, BEG_MESSAGE, END_MESSAGE, 4)
     answer = usefulLibrary.stringTosha512(challenge)

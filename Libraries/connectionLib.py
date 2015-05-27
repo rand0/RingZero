@@ -1,13 +1,29 @@
 __author__ = 'Aymen'
-import requests, os
-from ringzer0team import DOMAIN, USERNAME, PASSWORD
+import requests
+from Libraries import usefulLibrary
+from main import DOMAIN, CHALLENGES
+
+USERNAME = ""
+PASSWORD = ""
+
+credsPath = CHALLENGES + ".credentials"
 
 # authentificating
-def connect(url):
+def connect(url, errorHandling = ""):
     if url.find("ringzer0team") > -1:
+        global PASSWORD, USERNAME
+        if (USERNAME == "") or (PASSWORD == ""):
+            creds = usefulLibrary.readFile(credsPath)
+            creds = usefulLibrary.decryptData(creds)
+            USERNAME = creds[0]
+            PASSWORD = creds[1]
         credentials = {'username': USERNAME, 'password': PASSWORD}
         session = requests.Session()
-        session.post(DOMAIN+"/login", data=credentials)
+        login_response = session.post(DOMAIN+"/login", data=credentials)
+        if errorHandling != "":
+            if errorHandling in login_response.text:
+                usefulLibrary.delteFile(credsPath)
+                print("Error, failed to login ! Please try again")
         return session
     else:
         exit("Only accept " + DOMAIN + " domain for now")
@@ -70,35 +86,29 @@ def getChallengeCategorie(session, challengeID):
 
 # Send flag
 def submitFlag(flag, session, url):
-    # Lets save the flag in the flag file !
-    # we create prepare the file
-    SAVE_FILE = "RingZeroFlags.csv"
-    if not os.path.exists("RingZeroFlags.csv"):
-        f = open(SAVE_FILE, 'w')
-        f.write("Flag;Category;Name;ID;URL\n")
-        f.close()
+    # we add the flag to out databse
+    addFlagToFile(getFlagID(flag, session, url))
+    # And now send the flag to the server
+    credentials = {'flag': flag}
+    status = session.post(url, data=credentials)
+    return status  # useless
 
+def getFlagID(flag, session, url):
     # format flag
     challengeID = url.split('/')[-1]
     challengeName = getChallengeName(session, challengeID)
     challengeCat = getChallengeCategorie(session, challengeID)
-    flagID = flag + ";" + challengeCat + ';' + challengeName + ';' + challengeID + ';' + url + '\n'
+    flagID = flag + ";" + challengeCat + ';' + challengeName + ';' + challengeID + ';' + url + "\n"
+    return flagID
+
+def addFlagToFile(flagID):
+    # Lets save the flag in the flag file !
+    # we create prepare the file
+    filePath = "Flags/"+CHALLENGES+".csv"
+    if not usefulLibrary.fileExist(filePath):
+        usefulLibrary.createFile(filePath)
+        usefulLibrary.appendToFile(filePath, "Flag;Category;Name;ID;URL\n")
 
     # Check if flag exist already
-    f = open(SAVE_FILE, "r")
-    f.seek(0)
-    flagExist = False
-    for line in f:
-        if line == flagID:
-            flagExist = True
-    f.close()
-    if not flagExist:
-        f = open(SAVE_FILE, 'a')
-        f.write(flagID)
-        f.close()
-
-    # And now send the flag to the server
-    credentials = {'flag': flag}
-    status = session.post(url, data=credentials)
-
-    return status  # useless here
+    if not usefulLibrary.lookForString(filePath, flagID):
+        usefulLibrary.appendToFile(filePath, flagID)

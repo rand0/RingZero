@@ -1,5 +1,5 @@
 __author__ = 'Aymen'
-from Coding import hash_me_please
+from ringzer0team import hash_me_please
 
 challenges = {13 : hash_me_please.hash_me_please,
              }
