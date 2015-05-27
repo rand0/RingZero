@@ -1,4 +1,4 @@
-Tested on python 2.7.9 (windows)
+Tested on python 2.7.9 (windows) and 3.4.2 (linux)
 pip install requests
 
 To test, just execute "ringzero0team.py"

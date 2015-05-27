@@ -4,6 +4,6 @@ __author__ = 'Aymen'
 def stringTosha512(myString):
     import hashlib
     m = hashlib.sha512()
-    m.update(myString)
+    m.update(myString.encode('ascii'))
     sha512 = m.hexdigest()
     return sha512

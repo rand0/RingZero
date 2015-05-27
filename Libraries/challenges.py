@@ -9,6 +9,6 @@ def challenge(value):
 
 def doAll():
     output = ""
-    for key, _ in challenges.iteritems():
+    for key in challenges.keys():
         output += challenge(key)
     return output
