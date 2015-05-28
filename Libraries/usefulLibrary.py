@@ -8,6 +8,12 @@ def stringTosha512(myString):
     sha512 = m.hexdigest()
     return sha512
 
+def binaryStringToString(myString):
+    import binascii
+    n = int('0b' + myString, 2)
+    asciiValue = binascii.unhexlify('%x' % n)
+    return asciiValue
+
 def fileExist(filePath):
     import os
     return os.path.exists(filePath)
