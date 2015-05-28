@@ -1,8 +1,10 @@
 __author__ = 'Aymen'
 
 def hash_me_reloaded():
-    from Libraries import connectionLib
-    from Libraries import usefulLibrary
+    from Libraries import connectionLib, usefulLibrary
+    from termcolor import colored
+    from colorama import init
+
 
     URL_CHALLENGE = "http://ringzer0team.com/challenges/14"
     ERROR_HANDLE = "You are not logged in"
@@ -19,4 +21,4 @@ def hash_me_reloaded():
     if myFlag == "":
         return "Error, flag not found"
     connectionLib.submitFlag(myFlag, session, URL_CHALLENGE)
-    return "Flag was found : " + myFlag
+    return colored('Flag was found : ', 'green') + myFlag

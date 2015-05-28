@@ -1,14 +1,14 @@
 __author__ = 'Aymen'
 
 def hash_me_please():
-    from Libraries import connectionLib
-    from Libraries import usefulLibrary
+    from Libraries import connectionLib, usefulLibrary
+    from termcolor import colored
+    from colorama import init
 
     URL_CHALLENGE = "http://ringzer0team.com/challenges/13"
     ERROR_HANDLE = "You are not logged in"
     BEG_MESSAGE = "----- BEGIN MESSAGE -----<br />"   # to retrive the begining of flag
     END_MESSAGE = "<br />"                                      # end its end
-
     session = connectionLib.connect(URL_CHALLENGE, ERROR_HANDLE)
     page_source = connectionLib.getWebpage(session, URL_CHALLENGE)
     challenge = connectionLib.getPayload(page_source, BEG_MESSAGE, END_MESSAGE, 4)
@@ -18,4 +18,4 @@ def hash_me_please():
     if myFlag == "":
         return "Error, flag not found"
     connectionLib.submitFlag(myFlag, session, URL_CHALLENGE)
-    return "Flag was found : " + myFlag
+    return colored('Flag was found : ', 'green') + myFlag
