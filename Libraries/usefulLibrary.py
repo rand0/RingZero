@@ -69,9 +69,10 @@ def getUHID():
         except ():
             exit("Unable to generate secret cryptographyc key" )
     elif currentOS == "darwin":
-        uhid = stringTosha512(subprocess.check_output(
-            ('system_profiler | grep -i "Serial Number (system):"' + " | awk '{print $4}'")
-            .split()).decode('ascii'))
+        import commands
+        uhid = stringTosha512(commands.getstatusoutput(
+            "ioreg -l | awk '/IOPlatformSerialNumber/ { print $4 }' | sed s/\\"+'"//g'
+            )[1].decode('ascii'))
     else:
         import subprocess
         uhid = stringTosha512(subprocess.check_output(

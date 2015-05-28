@@ -23,7 +23,7 @@ def connect(url, errorHandling = ""):
         if errorHandling != "":
             if errorHandling in login_response.text:
                 usefulLibrary.delteFile(credsPath)
-                print("Error, failed to login ! Please try again")
+                exit("Error, failed to login ! Please try again")
         return session
     else:
         exit("Only accept " + DOMAIN + " domain for now")
